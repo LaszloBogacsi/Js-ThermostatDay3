@@ -1,8 +1,10 @@
 $(document).ready(function(){
 
+
   var thermostat = new Thermostat();
   var api_key = "90e9089cddc68f01cf03c6169b4b0ed5";
-  updateTemperature();
+
+  getTemperature();
 
   $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + "London" + "&units=metric&APPID=" + api_key,function(result){
     $("#outside_temperature").text(result.main.temp + " ˚C");
@@ -45,7 +47,6 @@ $(document).ready(function(){
     sendTemperature();
   }
 function sendTemperature(){
-
   $.ajax({
     type: "POST",
     url: "http://localhost:4567/temperature",
@@ -54,10 +55,16 @@ function sendTemperature(){
   });
 }
 
-
-
-
-  // ("http://localhost:4567/temperature", "temperature=" JSON.stringify({temperature: thermostat.temperature})
-  // );
+function getTemperature(){
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:4567/temperature",
+  }).done(function(data){
+    console.log('1');
+    console.log(data);
+    thermostat.temperature = data;
+    updateTemperature();
+  });
+}
 
 });
